@@ -13,7 +13,7 @@ from bpy.props import (FloatProperty,
 class addonPrefs(bpy.types.PropertyGroup):
     bl_idname = "QHDRI.prefs"
     
-    resolution_list = (("1k", "1K", ""), ("2k", "2K", ""), ("4k", "4K", ""), ("8k", "8K", ""), ("16k", "16K", ""), ("20k", "20K", ""),)
+    resolution_list = (("1k", "1K", ""), ("2k", "2K", ""), ("4k", "4K", ""), ("8k", "8K", ""),)
     filetype_list = (("hdr", "HDR", ""), ("exr", "EXR", ""),)
     
     textPath: bpy.props.StringProperty(
