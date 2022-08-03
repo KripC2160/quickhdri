@@ -1,7 +1,7 @@
 # quickhdri
 Blender addon that allows you to quickly add HDRIs from [Polyhaven.com](https://polyhaven.com/).
 
-### Warning: Currenlty the 16k and 20k HDRI resolution does not work 
+### Warning: Currenlty the 16k and 20k/24k HDRI resolution does not work 
 
 How to use the addon: 
 
