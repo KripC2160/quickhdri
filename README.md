@@ -1,5 +1,7 @@
 # quickhdri
-Blender addon that allows you to quickly add shaders from [Polyhaven.com](https://polyhaven.com/).
+Blender addon that allows you to quickly add HDRIs from [Polyhaven.com](https://polyhaven.com/).
+
+### Warning: Currenlty the 16k and 20k HDRI resolution does not work 
 
 How to use the addon: 
 
