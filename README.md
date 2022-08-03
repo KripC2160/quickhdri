@@ -8,3 +8,7 @@ How to use the addon:
 1: add the link of the polyhaven hdri you want to use in the text bar 
 2: select the resolution and the file type of the hdri 
 3: import it 
+
+## TODO
+- [ ] Fix the issue with 16k and 20k resolution 
+- [ ] Save the HDRI locally in blend file and delete ne in downloads directory 
