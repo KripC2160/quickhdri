@@ -11,5 +11,5 @@ How to use the addon:
 
 ## TODO
 - [ ] Add Windows support 
-- [ ] Fix the issue with 16k and 20k resolution 
+- [ ] Add 16k, 20k, and 24k resolution support
 - [ ] Save the HDRI locally in blend file and delete ne in downloads directory 
