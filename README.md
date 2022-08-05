@@ -10,7 +10,8 @@ How to use the addon:
 - 3: import it 
 
 ## TODO
-- [ x ] Add Windows support 
+- [x] Add Windows support 
+- [ ] Add Linux support
 - [ ] Add result message
 - [ ] Add 16k, 20k, and 24k resolution support
 - [ ] Save the HDRI locally in blend file and delete ne in downloads directory 
