@@ -1,14 +1,19 @@
 
 
 import bpy
-import os 
-import pwd
+import os
 import requests
 import addon_utils
 from bpy.props import (FloatProperty,
                         StringProperty, 
                         EnumProperty, 
+                        BoolProperty,
 )
+
+try:
+    import pwd
+except ModuleNotFoundError:
+    pass
 
 class addonPrefs(bpy.types.PropertyGroup):
     bl_idname = "QHDRI.prefs"
@@ -33,13 +38,26 @@ class addonPrefs(bpy.types.PropertyGroup):
         description = "List of available file types",
         items = filetype_list,
     )
-    
+
 class qhdri_import(bpy.types.Operator):
     bl_idname = "qhdri.import"
     bl_label = "Import"
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
+
+        scene = context.scene
+        addonPrefs = scene.qhdri
+        file_name = addonPrefs.textPath
+                
+        for i in range(4): #checking if it's a valid link, may change later for more accurate one
+            try:
+                file_name = file_name.split("/", 1)[1]
+            except IndexError:
+                return {'FINISHED'}
+            
+        
+        #creating nodes
         
         world = bpy.data.worlds['World']
         world.use_nodes = True
@@ -71,24 +89,20 @@ class qhdri_import(bpy.types.Operator):
         world.node_tree.links.new(mapping.outputs[0], envTex.inputs[0])
         world.node_tree.links.new(texCord.outputs['Object'], mapping.inputs[0])
         
-        #getting files from the web
-        
-        scene = context.scene
-        addonPrefs = scene.qhdri
-        file_name = addonPrefs.textPath
-
-        username = pwd.getpwuid(os.getuid())[0]
-        
-        for i in range(4):
-            file_name = file_name.split("/", 1)[1]
         #print(file_name)
         hdriFile = 'https://dl.polyhaven.org/file/ph-assets/HDRIs/'+ addonPrefs.selectFileType+'/'+addonPrefs.selectRes+'/'+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower()
         r = requests.get(hdriFile)
         
-        if os.name == 'nt': #WIP WINDOWS
-            with open("C:\\"+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower(), 'wb') as f:
-                f.write(r.content)
+        if os.name == 'nt': 
+            username = str(os.environ['USERPROFILE']+'\\Downloads\\')
+            f = open(username+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower(), 'wb')
+            f.write(r.content)
+            f.close()
+            
+            envTex.image = bpy.data.images.load(username+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower())
+            
         else:
+            username = pwd.getpwuid(os.getuid())[0]
             f = open('/Users/'+username+'/Downloads/'+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower(), 'wb')
             f.write(r.content)
             f.close()
@@ -96,7 +110,7 @@ class qhdri_import(bpy.types.Operator):
             envTex.image = bpy.data.images.load('/Users/'+username+'/Downloads/'+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower())
         
         #print(hdriFile)
-            
+        addonPrefs.qhdriBool = True
         return {'FINISHED'}
 
 class quickHDRI(bpy.types.Panel): #replace the class name 
@@ -143,8 +157,4 @@ if __name__ == "__main__":
 
 #https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/dark_autumn_forest_1k.hdr
 #                                               ^   ^     ^
-#                                        exr/hdr 1k~24k  name 
-
-# LINK [___________]
-#
-# [  8K  ][  EXR  ] [  IMPORT ]
+# options:                               exr/hdr 1k~24k  name 
