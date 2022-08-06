@@ -2,6 +2,7 @@
 
 import bpy
 import os
+import platform
 import requests
 import addon_utils
 from bpy.props import (FloatProperty,
@@ -93,22 +94,28 @@ class qhdri_import(bpy.types.Operator):
         hdriFile = 'https://dl.polyhaven.org/file/ph-assets/HDRIs/'+ addonPrefs.selectFileType+'/'+addonPrefs.selectRes+'/'+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower()
         r = requests.get(hdriFile)
         
-        if os.name == 'nt': 
+        if platform.system() == 'Windows': 
             username = str(os.environ['USERPROFILE']+'\\Downloads\\')
             f = open(username+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower(), 'wb')
             f.write(r.content)
             f.close()
-            
             envTex.image = bpy.data.images.load(username+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower())
-            
-        else:
+        elif platform.system() == 'Darwin':
             username = pwd.getpwuid(os.getuid())[0]
             f = open('/Users/'+username+'/Downloads/'+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower(), 'wb')
             f.write(r.content)
             f.close()
             
             envTex.image = bpy.data.images.load('/Users/'+username+'/Downloads/'+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower())
+        elif platform.system() == 'Linux':
+            username = pwd.getpwuid(os.getuid())[0]
+            f = open('/home/'+username+'/Downloads/'+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower(), 'wb')
+            f.write(r.content)
+            f.close()
+            
+            envTex.image = bpy.data.images.load('/home/'+username+'/Downloads/'+file_name+'_'+addonPrefs.selectRes.lower()+'.'+addonPrefs.selectFileType.lower())
         
+
         #print(hdriFile)
         addonPrefs.qhdriBool = True
         return {'FINISHED'}
